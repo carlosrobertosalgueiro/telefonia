@@ -1,6 +1,11 @@
 defmodule Telefonia do
-  @spec cadastrar_assinate(any, any, any) :: any
-  def cadastrar_assinate(nome, numero, cpf) do
-    Assinante.cadastrar(nome, numero, cpf)
+
+    def start do
+    File.write("pre.txt", :erlang.term_to_binary([]))
+    File.write("pos.txt", :erlang.term_to_binary([]))
+  end
+
+  def cadastrar_assinate(nome, numero, cpf, plano) do
+    Assinante.cadastrar(nome, numero, cpf, plano)
   end
 end
