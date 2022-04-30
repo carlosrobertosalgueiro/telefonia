@@ -39,13 +39,15 @@ defmodule Assinante do
      {:ok, "Assinante carlos cadastrado com sucesso!"}
 
   """
-
-  def cadastrar(nome, numero, cpf, plano \\ :prepago) do
+  def cadastrar(nome, numero, cpf, :prepago), do: cadastrar(nome, numero, cpf, %Prepago{})
+  def cadastrar(nome, numero, cpf, :pospago), do: cadastrar(nome, numero, cpf, %Pospago{})
+  def cadastrar(nome, numero, cpf, plano) do
     case buscar_assinantes(numero) do
       nil ->
-        (read(plano) ++ [%__MODULE__{nome: nome, numero: numero, cpf: cpf, plano: plano}])
+        assinante = %__MODULE__{nome: nome, numero: numero, cpf: cpf, plano: plano}
+        (read(pagar_plano(assinante)) ++ [assinante])
         |> :erlang.term_to_binary()
-        |> write(plano)
+        |> write(pagar_plano(assinante))
 
         {:ok, "Assinante #{nome} cadastrado com sucesso!"}
 
@@ -56,6 +58,14 @@ defmodule Assinante do
 
   defp write(lista_assinantes, plano), do: File.write(@assinantes[plano], lista_assinantes)
 
+
+  defp pagar_plano(assinante) do
+    case assinante.plano.__struct__ == Prepago do
+      true -> :prepago
+      false -> :pospago
+    end
+  end
+
   def deletar(numero) do
     assinante = buscar_assinantes(numero)
 
@@ -63,7 +73,7 @@ defmodule Assinante do
       assinantes()
       |> List.delete(assinante)
       |> :erlang.term_to_binary()
-      |> write(assinante.plano)
+      |> write(pagar_plano(assinante))
 
     {result_delete, "Assinante #{assinante.nome} deletado!"}
   end
