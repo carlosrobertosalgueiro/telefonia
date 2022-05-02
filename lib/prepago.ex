@@ -8,8 +8,14 @@ defmodule Prepago do
     custo = @preco_minuto * duracao
 
     cond do
-      custo < 10 -> {:ok, "A chamada custou #{custo}"}
-      true -> {:error, "você não tem creditos suficiente, faça uma recarga "}
+      custo < assinante.plano.creditos ->
+        plano = assinante.plano
+        plano = %__MODULE__{plano | creditos: plano.creditos - custo}
+        assinante = %Assinante{assinante | plano: plano}
+        {:ok, "A chamada custou #{custo}, e você tem #{plano.creditos} de creditos"}
+
+      true ->
+        {:error, "você não tem creditos suficiente, faça uma recarga"}
     end
   end
 end
