@@ -25,7 +25,7 @@ defmodule PrepagoTest do
       Assinante.cadastrar("carlos", "123", "123", :prepago)
 
       assert Prepago.fazer_chamada("123", DateTime.utc_now(), 10) ==
-        {:error, "você não tem creditos suficiente, faça uma recarga"}
+               {:error, "você não tem creditos suficiente, faça uma recarga"}
     end
   end
 end
