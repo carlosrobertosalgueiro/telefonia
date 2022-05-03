@@ -16,6 +16,7 @@ defmodule PrepagoTest do
   describe "Funções de ligação" do
     test "Fazer uma ligação" do
       Assinante.cadastrar("carlos", "123", "123", :prepago)
+      Recarga.nova(DateTime.utc_now(), 10, "123")
 
       assert Prepago.fazer_chamada("123", DateTime.utc_now(), 3) ==
                {:ok, "A chamada custou 4.35, e você tem 5.65 de creditos"}
