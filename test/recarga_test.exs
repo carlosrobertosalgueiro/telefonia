@@ -21,7 +21,7 @@ defmodule RecargaTest do
     test "Deve realizar uma recarga" do
       Assinante.cadastrar("Bruce", "123", "1231", :prepago)
 
-      {:ok,_msm} = Recarga.nova(DateTime.utc_now(), 30, "123")
+      {:ok, _msm} = Recarga.nova(DateTime.utc_now(), 30, "123")
       assinante = Assinante.buscar_assinantes("123", :prepago)
 
       assert assinante.plano.creditos == 30
