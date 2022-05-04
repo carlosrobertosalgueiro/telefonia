@@ -1,3 +1,24 @@
 defmodule Pospago do
-  defstruct value: nil
+  defstruct valor: 0
+
+  @custo_ligação 1.40
+
+  def fazer_chamada(numero, data, duracao) do
+    Assinante.buscar_assinantes(numero, :pospago)
+    |> Chamada.registrar(data, duracao)
+
+    {:ok, "Chamada feita com sucesso! Duração #{duracao} minutos"}
+  end
+
+  def imprimir_conta(mes, ano, numero) do
+    assinante = Contas.imprimir(mes, ano, numero, :pospago)
+
+    valor_total =
+      assinante.chamadas
+      |> Enum.map(&(&1.duracao * @custo_ligação))
+      |> Enum.sum()
+      |> Float.floor()
+
+    %Assinante{assinante | plano: %__MODULE__{valor: valor_total}}
+  end
 end
