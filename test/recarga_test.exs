@@ -11,13 +11,21 @@ defmodule RecargaTest do
     end)
   end
 
-  test "Deve realizar uma recarga" do
-    Assinante.cadastrar("Bruce", "123", "1231", :prepago)
+  describe "Estrutura de recarga" do
+    test "Testando estruta da recarga" do
+      assert %Recarga{data: "teste", valor: 50}.valor == 50
+    end
+  end
 
-    {:ok, msm} = Recarga.nova(DateTime.utc_now(), 30, "123")
-    assinante = Assinante.buscar_assinantes("123", :prepago)
+  describe "Realiza testes de recarga" do
+    test "Deve realizar uma recarga" do
+      Assinante.cadastrar("Bruce", "123", "1231", :prepago)
 
-    assert assinante.plano.creditos == 30
-    assert Enum.count(assinante.plano.recargas) == 1
+      {:ok,_msm} = Recarga.nova(DateTime.utc_now(), 30, "123")
+      assinante = Assinante.buscar_assinantes("123", :prepago)
+
+      assert assinante.plano.creditos == 30
+      assert Enum.count(assinante.plano.recargas) == 1
+    end
   end
 end
