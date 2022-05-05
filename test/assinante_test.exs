@@ -47,6 +47,15 @@ defmodule AssinanteTest do
     end
   end
 
+  describe "atualizar assinante" do
+    test "Deve atualizar assinante" do
+      Telefonia.cadastrar_assinante("Carlos", "123", "123", :prepago)
+      assinante = Assinante.buscar_assinantes("123")
+      assinante_atualizado = %Assinante{assinante | nome: "Carlos Roberto"}
+      assert Assinante.atualizar("123", assinante_atualizado) == :ok
+    end
+  end
+
   describe "delete" do
     test "deleta o assinante" do
       Assinante.cadastrar("Bruce", "123", "1231", :prepago)
