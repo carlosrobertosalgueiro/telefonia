@@ -58,6 +58,11 @@ defmodule Assinante do
     end
   end
 
+  @spec atualizar(
+          any,
+          atom
+          | %{:plano => atom | %{:__struct__ => any, optional(any) => any}, optional(any) => any}
+        ) :: :ok | {:error, <<_::296>>}
   def atualizar(numero, assinante) do
     {assinante_antigo, nova_lista} = deletar_item(numero)
 
@@ -68,7 +73,7 @@ defmodule Assinante do
         |> write(pegar_plano(assinante))
 
       false ->
-        {:error, "Assinante não pore alterar seu plano"}
+        {:error, "Assinante não pode alterar seu plano"}
     end
   end
 
